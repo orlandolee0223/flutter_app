@@ -9,6 +9,9 @@ import 'package:flutter_app/constants/routerUtil.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 // components
 import 'package:flutter_app/components/header/index.dart';
+// store
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_app/components/webView/webView.store.dart';
 // utils
 import 'package:flutter_app/utils/browser.dart';
 import './utils.dart';
@@ -57,25 +60,18 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
   // 获取对应的数据
   void getData();
 
-  double lineProgress = 0.0;
   void onProgressChanged(InAppWebViewController controller, int progress) {
-    setState(() {
-      lineProgress = progress / 100;
-    });
+    webViewStore.progress = progress / 100;
   }
 
   void onLoadStart(InAppWebViewController controller, Uri? url) {
-    setState(() {
-      this.url = url.toString();
-      lineProgress = 0.0;
-    });
+    this.url = url.toString();
+    webViewStore.progress = 0.0;
   }
 
   void onLoadStop(InAppWebViewController controller, Uri? url) {
-    setState(() {
-      this.url = url.toString();
-      lineProgress = 1.0;
-    });
+    this.url = url.toString();
+    webViewStore.progress = 1.0;
   }
 
   void onUpdateVisitedHistory(
@@ -83,13 +79,7 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
     Uri? url,
     bool? androidIsReload,
   ) {
-    String newUrl = url.toString();
-    if (this.url == newUrl) {
-      return;
-    }
-    setState(() {
-      this.url = url.toString();
-    });
+    this.url = url.toString();
   }
 
   // 拦截请求
@@ -106,7 +96,7 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
       'data',
       'javascript',
       'about',
-      'js-frame', // 增加白名单
+      'js-frame', // BB电游增加白名单
     ].contains(uri.scheme)) {
       if (await canLaunchUrl(Uri.parse(url))) {
         await launchUrl(
@@ -229,7 +219,6 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
 
   // 内容区域
   Widget renderContent(BuildContext context) {
-    print('@lineProgress: ${lineProgress}_$url');
     return Scaffold(
       backgroundColor: ColorConstant.backgroundColor,
       appBar: renderHeader(),
@@ -251,11 +240,11 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
                 )
               : Container(),
           // 进度条
-          RepaintBoundary(
-            child: LinearProgressIndicator(
+          Observer(
+            builder: (_) => LinearProgressIndicator(
               backgroundColor: ColorConstant.transparentColor,
               minHeight: 2,
-              value: lineProgress == 1.0 ? 0 : lineProgress,
+              value: webViewStore.progress == 1.0 ? 0 : webViewStore.progress,
               valueColor:
                   AlwaysStoppedAnimation<Color>(ColorConstant.primaryColor),
             ),
