@@ -49,7 +49,6 @@ class MyImage extends StatelessWidget {
         ),
       );
     }
-    print('src: $src');
     // 如果是本地图片
     return RepaintBoundary(
       child: Image.asset(
