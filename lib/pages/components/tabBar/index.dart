@@ -49,6 +49,40 @@ class MyTabBarState extends State<MyTabBar> {
     widget.pageController.jumpToPage(index);
   }
 
+  List<Widget> getIcon({
+    required bool isActive,
+    required int index,
+    required TabItem value, //
+  }) {
+    List<Widget> list = [
+      Padding(
+        padding: const EdgeInsets.only(top: 8, bottom: 4).r,
+        child: MyImage(
+          src: imgPath + (isActive ? value.activeIcon : value.icon),
+          height: 21,
+        ),
+      )
+    ];
+    // 如果是第4个
+    if (index == 4) {
+      list.add(Observer(builder: (_) {
+        if (messageStore.isNoReadMessage) {
+          return const Positioned(
+            top: 0,
+            right: -5,
+            child: MyImage(
+              src: 'assets/images/message/icon_no_read.png',
+              width: 16,
+              height: 16,
+            ),
+          );
+        }
+        return nil;
+      }));
+    }
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -73,33 +107,11 @@ class MyTabBarState extends State<MyTabBar> {
                   children: [
                     Stack(
                       alignment: Alignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, bottom: 4).r,
-                          child: MyImage(
-                            src: imgPath +
-                                (isActive ? value.activeIcon : value.icon),
-                            height: 21,
-                          ),
-                        ),
-                        entry.key == 4
-                            ? Observer(builder: (_) {
-                                if (messageStore.isNoReadMessage) {
-                                  return const Positioned(
-                                    top: 0,
-                                    right: -5,
-                                    child: MyImage(
-                                      src:
-                                          'assets/images/message/icon_no_read.png',
-                                      width: 16,
-                                      height: 16,
-                                    ),
-                                  );
-                                }
-                                return nil;
-                              })
-                            : const SizedBox(),
-                      ],
+                      children: getIcon(
+                        isActive: isActive,
+                        index: entry.key,
+                        value: value,
+                      ),
                     ),
                     Text(
                       value.label,

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 // 进场动画卡顿
-class AsyncState<T extends StatefulWidget> extends State<T> {
+mixin AsyncState<T extends StatefulWidget> on State<T> {
   Completer resumeCompleter = Completer();
 
   @override
@@ -23,10 +23,5 @@ class AsyncState<T extends StatefulWidget> extends State<T> {
   // 入场路由动画执行完成，新入场页面完全进入
   void initAsyncLoad() {
     resumeCompleter.complete(true);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox();
   }
 }
