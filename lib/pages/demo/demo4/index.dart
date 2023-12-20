@@ -69,7 +69,7 @@ class CursorPointer extends CustomPainter {
       oldDelegate._offset != _offset;
 }
 
-class Demo4PageState extends AsyncState<Demo4Page> {
+class Demo4PageState extends State<Demo4Page> with AsyncState<Demo4Page> {
   final GlobalKey _paintKey = GlobalKey();
   Offset _offset = Offset.zero;
 
