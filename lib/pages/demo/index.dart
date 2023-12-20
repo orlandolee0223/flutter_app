@@ -33,6 +33,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 12).r,
         child: SizedBox(
           height: 1000.w,
           child: Column(
