@@ -73,6 +73,9 @@ dependencies:
     git:
       url: https://github.com/ymback/flutter_pulltorefresh.git
 
+  # 空元素
+  nil: ^1.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

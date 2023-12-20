@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+// nil
+import 'package:nil/nil.dart';
 // flutter_screenutil
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // constants
@@ -49,44 +51,41 @@ class MyTabBarState extends State<MyTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (_) {
-        bool isNoReadMessage = messageStore.isNoReadMessage;
-        return BottomAppBar(
-          shape: AutomaticNotchedShape(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15).r, // 圆角矩形
-            ),
-          ),
-          color: const Color.fromRGBO(255, 255, 255, 0.9), // 导航栏背景颜色
-          elevation: 40,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround, // 均分底部导航栏横向空间
-            children: tabList.asMap().entries.map((entry) {
-              TabItem value = entry.value;
-              bool isActive = currentIndex == entry.key;
-              bool isBadge = entry.key == 4 && isNoReadMessage;
-              return Expanded(
-                child: InkWell(
-                  child: SizedBox(
-                    height: Device.bottomNavigationBarHeight,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8, bottom: 4).r,
-                              child: MyImage(
-                                src: imgPath +
-                                    (isActive ? value.activeIcon : value.icon),
-                                height: 21,
-                              ),
-                            ),
-                            isBadge
-                                ? const Positioned(
+    return BottomAppBar(
+      shape: AutomaticNotchedShape(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15).r, // 圆角矩形
+        ),
+      ),
+      color: const Color.fromRGBO(255, 255, 255, 0.9), // 导航栏背景颜色
+      elevation: 40,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround, // 均分底部导航栏横向空间
+        children: tabList.asMap().entries.map((entry) {
+          TabItem value = entry.value;
+          bool isActive = currentIndex == entry.key;
+          return Expanded(
+            child: InkWell(
+              child: SizedBox(
+                height: Device.bottomNavigationBarHeight,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, bottom: 4).r,
+                          child: MyImage(
+                            src: imgPath +
+                                (isActive ? value.activeIcon : value.icon),
+                            height: 21,
+                          ),
+                        ),
+                        entry.key == 4
+                            ? Observer(builder: (_) {
+                                if (messageStore.isNoReadMessage) {
+                                  return const Positioned(
                                     top: 0,
                                     right: -5,
                                     child: MyImage(
@@ -95,29 +94,30 @@ class MyTabBarState extends State<MyTabBar> {
                                       width: 16,
                                       height: 16,
                                     ),
-                                  )
-                                : Container()
-                          ],
-                        ),
-                        Text(
-                          value.label,
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            color: isActive
-                                ? ColorConstant.strongColor
-                                : ColorConstant.normalColor,
-                          ),
-                        )
+                                  );
+                                }
+                                return nil;
+                              })
+                            : const SizedBox(),
                       ],
                     ),
-                  ),
-                  onTap: () => onTap(entry.key),
+                    Text(
+                      value.label,
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: isActive
+                            ? ColorConstant.strongColor
+                            : ColorConstant.normalColor,
+                      ),
+                    )
+                  ],
                 ),
-              );
-            }).toList(),
-          ),
-        );
-      },
+              ),
+              onTap: () => onTap(entry.key),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }
