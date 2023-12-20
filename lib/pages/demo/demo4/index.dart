@@ -1,12 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-// flutter_screenutil
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 // constants
 import 'package:flutter_app/constants/color.dart';
 // components
 import 'package:flutter_app/components/header/index.dart';
+import 'package:flutter_app/components/asyncState/index.dart';
 
 class Demo4Page extends StatefulWidget {
   const Demo4Page({super.key});
@@ -25,7 +24,7 @@ class BackgroundColor extends CustomPainter {
     Colors.red,
   ];
 
-  Size _size;
+  final Size _size;
   BackgroundColor(this._size);
 
   @override
@@ -48,7 +47,7 @@ class BackgroundColor extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(BackgroundColor other) => false;
+  bool shouldRepaint(BackgroundColor oldDelegate) => false;
 }
 
 class CursorPointer extends CustomPainter {
@@ -66,10 +65,11 @@ class CursorPointer extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CursorPointer old) => old._offset != _offset;
+  bool shouldRepaint(CursorPointer oldDelegate) =>
+      oldDelegate._offset != _offset;
 }
 
-class Demo4PageState extends State<Demo4Page> {
+class Demo4PageState extends AsyncState<Demo4Page> {
   final GlobalKey _paintKey = GlobalKey();
   Offset _offset = Offset.zero;
 
@@ -79,6 +79,18 @@ class Demo4PageState extends State<Demo4Page> {
     Offset offset = referenceBox.globalToLocal(event.position);
     setState(() {
       _offset = offset;
+    });
+  }
+
+  bool isAnimateEnd = false;
+  @override
+  void initState() {
+    super.initState();
+
+    asyncWaitResume().then((value) {
+      setState(() {
+        isAnimateEnd = true;
+      });
     });
   }
 
@@ -116,10 +128,12 @@ class Demo4PageState extends State<Demo4Page> {
       ),
       body: Stack(
         fit: StackFit.expand,
-        children: <Widget>[
-          _buildBackground(),
-          _buildCursor(),
-        ],
+        children: isAnimateEnd
+            ? [
+                _buildBackground(),
+                _buildCursor(),
+              ]
+            : [],
       ),
     );
   }
