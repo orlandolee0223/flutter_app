@@ -22,6 +22,34 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true; // 保持应用状态
 
+  Widget renderNavItem({
+    isLast = false,
+    page,
+    text,
+  }) {
+    return Container(
+      width: double.infinity,
+      height: 50.w,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12).r,
+        color: ColorConstant.primaryColor,
+      ),
+      margin: isLast ? null : const EdgeInsets.only(bottom: 12).r,
+      alignment: Alignment.center,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => page,
+            ),
+          );
+        },
+        child: text,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -38,88 +66,22 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
           height: 1000.w,
           child: Column(
             children: <Widget>[
-              Container(
-                width: double.infinity,
-                height: 50.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12).r,
-                  color: ColorConstant.primaryColor,
-                ),
-                margin: const EdgeInsets.only(bottom: 14).r,
-                alignment: Alignment.center,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Demo1Page(),
-                      ),
-                    );
-                  },
-                  child: const Text('Demo1'),
-                ),
+              renderNavItem(
+                page: const Demo1Page(),
+                text: const Text('Demo1'),
               ),
-              Container(
-                width: double.infinity,
-                height: 50.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12).r,
-                  color: ColorConstant.primaryColor,
-                ),
-                margin: const EdgeInsets.only(bottom: 14).r,
-                alignment: Alignment.center,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Demo2Page(),
-                      ),
-                    );
-                  },
-                  child: const Text('Demo2'),
-                ),
+              renderNavItem(
+                page: const Demo2Page(),
+                text: const Text('Demo2'),
               ),
-              Container(
-                width: double.infinity,
-                height: 50.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12).r,
-                  color: ColorConstant.primaryColor,
-                ),
-                margin: const EdgeInsets.only(bottom: 14).r,
-                alignment: Alignment.center,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Demo3Page(),
-                      ),
-                    );
-                  },
-                  child: const Text('Demo3'),
-                ),
+              renderNavItem(
+                page: const Demo3Page(),
+                text: const Text('Demo3'),
               ),
-              Container(
-                width: double.infinity,
-                height: 50.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12).r,
-                  color: ColorConstant.primaryColor,
-                ),
-                alignment: Alignment.center,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Demo4Page(),
-                      ),
-                    );
-                  },
-                  child: const Text('Demo4'),
-                ),
+              renderNavItem(
+                isLast: true,
+                page: const Demo4Page(),
+                text: const Text('Demo4'),
               ),
             ],
           ),
