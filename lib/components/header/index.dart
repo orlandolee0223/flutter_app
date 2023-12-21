@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // flutter_screenutil
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+// config
+import 'package:flutter_app/config/image.dart';
 // constants
 import 'package:flutter_app/constants/color.dart';
 import 'package:flutter_app/constants/device.dart';
@@ -30,7 +32,7 @@ class NavBack extends StatelessWidget {
                   ? const EdgeInsets.symmetric(horizontal: 14).r
                   : const EdgeInsets.symmetric(horizontal: 14),
               child: MyImage(
-                src: 'assets/header/icon_arrowleft_nor.png',
+                src: 'icon_arrowleft_nor.png'.header,
                 width: 8.0,
                 isScreen: isScreen,
               ),

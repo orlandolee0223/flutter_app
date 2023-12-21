@@ -11,15 +11,14 @@ import 'package:flutter_app/constants/device.dart';
 import 'package:flutter_app/components/image/index.dart';
 // store
 import 'package:flutter_app/pages/mine/message.store.dart';
+// config
+import 'package:flutter_app/config/image.dart';
 // constants
 import 'package:flutter_app/constants/color.dart';
 import './constants.dart';
 
 // 导出
 export './constants.dart';
-
-// 图片资源路径
-String imgPath = 'assets/tabbar/';
 
 class MyTabBar extends StatefulWidget {
   const MyTabBar({
@@ -58,7 +57,7 @@ class MyTabBarState extends State<MyTabBar> {
       Padding(
         padding: const EdgeInsets.only(top: 8, bottom: 4).r,
         child: MyImage(
-          src: imgPath + (isActive ? value.activeIcon : value.icon),
+          src: (isActive ? value.activeIcon : value.icon).tabbar,
           height: 21,
         ),
       )

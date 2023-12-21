@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 // flutter_screenutil
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+// config
+import 'package:flutter_app/config/image.dart';
 // cached_network_image
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -40,11 +42,11 @@ class MyImage extends StatelessWidget {
         height: isScreen ? height?.w : height,
         fit: fit,
         placeholder: (context, url) => Image.asset(
-          customPreloadImage ?? 'assets/image/default.png',
+          customPreloadImage ?? 'default.png'.images,
           fit: BoxFit.cover,
         ),
         errorWidget: (context, url, error) => Image.asset(
-          customErrorImage ?? 'assets/image/default.png',
+          customErrorImage ?? 'default.png'.images,
           fit: BoxFit.cover,
         ),
       );
