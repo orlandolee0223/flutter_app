@@ -6,3 +6,6 @@ final Animatable<Offset> packetMiddleLeftTween = Tween<Offset>(
   begin: Offset.zero,
   end: const Offset(-1.0 / 3.0, 0.0),
 );
+
+// 入场动画执行完成值
+const double packetAnimationFinish = 1.0;

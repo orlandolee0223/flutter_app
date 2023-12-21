@@ -30,7 +30,7 @@ class SplashPageState extends State<SplashPage> {
 
   // 点击完成
   void onFinish() {
-    routerUtil.onPushAndRemoveFadeHome(context); // 重新定向到首页
+    routerUtil.onPushAndRemoveHome(context); // 重新定向到首页
   }
 
   @override

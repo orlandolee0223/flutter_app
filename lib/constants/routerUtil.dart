@@ -50,17 +50,6 @@ class RouterUtil {
     );
   }
 
-  // 其他路由出栈, Home进栈
-  void onPushAndRemoveHome1(BuildContext? _) {
-    Navigator.pushAndRemoveUntil(
-      _ ?? context,
-      MaterialPageRoute(
-        builder: (context) => const MainPage(),
-      ),
-      (_) => false, // 之前路由全部出栈
-    );
-  }
-
   // 去存款
   void onPushDeposit() {
     Navigator.push(

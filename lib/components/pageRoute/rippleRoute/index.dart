@@ -85,13 +85,69 @@ class RippleRoute extends PageRoute {
   }
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation) =>
-      builder(context);
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    return builder(context);
+  }
+
+  // 内容区域
+  Widget renderContent(
+    BuildContext context,
+    Animation<double> animation,
+    Widget child,
+  ) {
+    // 入场动画执行完成
+    if (animation.value == packetAnimationFinish) {
+      return child;
+    }
+    // 入场动画执行
+    double circleRadius = routeConfig.circleRadius;
+    double animationValue = animation.value;
+    double offsetX = routeConfig.offset.dx;
+    double offsetY = routeConfig.offset.dy;
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Positioned(
+          left: offsetX - circleRadius * animationValue,
+          top: offsetY - circleRadius * animationValue,
+          child: SizedBox(
+            height: circleRadius * 2 * animationValue,
+            width: circleRadius * 2 * animationValue,
+            child: ClipOval(
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    left: circleRadius * animationValue - offsetX,
+                    top: circleRadius * animationValue - offsetY,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: child,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
     final bool linearTransition = isPopGestureInProgress(this);
     return SlideTransition(
       position: (linearTransition
@@ -104,41 +160,7 @@ class RippleRoute extends PageRoute {
           .drive(packetMiddleLeftTween), // 动画缩放值的变化
       textDirection: Directionality.of(context), // 动画执行的位置关系
       transformHitTests: false, // 点击事件是否落在动画后的控件上
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Positioned(
-            top: routeConfig.offset.dy -
-                routeConfig.circleRadius * animation.value,
-            left: routeConfig.offset.dx -
-                routeConfig.circleRadius * animation.value,
-            child: SizedBox(
-              height: routeConfig.circleRadius * 2 * animation.value,
-              width: routeConfig.circleRadius * 2 * animation.value,
-              child: ClipOval(
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      top: routeConfig.circleRadius * animation.value -
-                          routeConfig.offset.dy,
-                      left: routeConfig.circleRadius * animation.value -
-                          routeConfig.offset.dx,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: child,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+      child: renderContent(context, animation, child),
     );
   }
 }

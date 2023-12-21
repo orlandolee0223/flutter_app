@@ -50,13 +50,11 @@ class MyImage extends StatelessWidget {
       );
     }
     // 如果是本地图片
-    return RepaintBoundary(
-      child: Image.asset(
-        src,
-        width: isScreen ? width?.w : width,
-        height: isScreen ? height?.w : height,
-        fit: fit,
-      ),
+    return Image.asset(
+      src,
+      width: isScreen ? width?.w : width,
+      height: isScreen ? height?.w : height,
+      fit: fit,
     );
   }
 
