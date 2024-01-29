@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-// flutter_screenutil
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 // constants
 import 'package:flutter_app/constants/color.dart';
 // components
 import 'package:flutter_app/components/header/index.dart';
+import 'package:flutter_app/components/image/index.dart';
 
 class Demo2Page extends StatefulWidget {
   const Demo2Page({super.key});
@@ -22,10 +21,10 @@ class Demo2PageState extends State<Demo2Page> {
         title: 'Demo2',
         color: ColorConstant.strongColor,
       ),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: 1000.w,
-          child: const Text('Demo2'),
+      body: const SingleChildScrollView(
+        child: MyImage(
+          width: double.infinity,
+          src: 'https://img95.699pic.com/photo/40253/4274.jpg_wh860.jpg',
         ),
       ),
     );
