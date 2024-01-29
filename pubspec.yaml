@@ -33,37 +33,37 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.6
 
   # mobx library
-  mobx: ^2.2.1
-  flutter_mobx: ^2.1.1
+  mobx: ^2.3.0+1
+  flutter_mobx: ^2.2.0+2
 
   # webView
-  flutter_inappwebview: ^5.8.0
+  flutter_inappwebview: 5.8.0
 
   # 网络图片缓存
-  cached_network_image: ^3.3.0
+  cached_network_image: ^3.3.1
 
   # 屏幕适配
   flutter_screenutil: ^5.9.0
 
   # 浏览器跳转
-  url_launcher: ^6.2.1
+  url_launcher: ^6.2.4
 
   # requests
-  dio: ^5.3.3
+  dio: ^5.4.0
   dio_http_cache_fix: ^0.5.1
-  dio_http2_adapter: ^2.3.1+1
+  dio_http2_adapter: ^2.4.0
 
   # 缓存
-  path_provider: ^2.1.1
+  path_provider: ^2.1.2
 
   # 加密
   crypto: ^3.0.3
 
   # 自动生成splash
-  flutter_native_splash: ^2.3.5
+  flutter_native_splash: ^2.3.10
 
   # toast
   flutter_easyloading: ^3.0.5
@@ -78,15 +78,15 @@ dev_dependencies:
     sdk: flutter
 
   # mobx library
-  build_runner: ^2.4.6
-  mobx_codegen: ^2.4.0
+  build_runner: ^2.4.8
+  mobx_codegen: ^2.6.0+1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

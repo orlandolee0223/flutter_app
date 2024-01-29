@@ -110,7 +110,10 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
   }
 
   // 返回处理
-  Future<bool> onWillPop() async {
+  Future onPopInvoked(bool didPop) async {
+    if (didPop) {
+      return;
+    }
     bool canBack = false;
     try {
       canBack = await controller.canGoBack();
@@ -142,7 +145,7 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
     }
     return NavBack(
       isScreen: isScreen,
-      onPressed: onWillPop,
+      onPressed: () => onPopInvoked(false),
     );
   }
 
@@ -260,8 +263,9 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
     if (!isWillPop) {
       return renderContent(context);
     }
-    return WillPopScope(
-      onWillPop: onWillPop, // android自带返回触发, 会禁止ios右滑返回
+    return PopScope(
+      canPop: false,
+      onPopInvoked: onPopInvoked, // android自带返回触发, 会禁止ios右滑返回
       child: renderContent(context),
     );
   }
