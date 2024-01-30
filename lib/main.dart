@@ -63,6 +63,8 @@ class MyApp extends StatelessWidget {
           // 去除选中的波纹动画效果
           highlightColor: ColorConstant.transparentColor,
           splashColor: ColorConstant.transparentColor,
+          // 不使用Material3 UI
+          useMaterial3: false,
           // 统一路由切换
           pageTransitionsTheme:
               const PageTransitionsTheme(builders: defaultBuilders),
