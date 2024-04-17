@@ -10,6 +10,7 @@ import 'package:flutter_app/pages/demo/demo1/index.dart';
 import 'package:flutter_app/pages/demo/demo2/index.dart';
 import 'package:flutter_app/pages/demo/demo3/index.dart';
 import 'package:flutter_app/pages/demo/demo4/index.dart';
+import 'package:flutter_app/pages/demo/demo5/index.dart';
 
 class DemoPage extends StatefulWidget {
   const DemoPage({super.key});
@@ -79,9 +80,13 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 text: const Text('Demo3'),
               ),
               renderNavItem(
-                isLast: true,
                 page: const Demo4Page(),
                 text: const Text('Demo4'),
+              ),
+              renderNavItem(
+                isLast: true,
+                page: const Demo5Page(),
+                text: const Text('Demo5'),
               ),
             ],
           ),
