@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 // 动画时长
-const int animateDuration = 500;
+const int animateDuration = 300;
 
 // 缩放
 class ScaleConfig {
