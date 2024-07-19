@@ -36,11 +36,11 @@ dependencies:
   cupertino_icons: ^1.0.6
 
   # mobx library
-  mobx: ^2.3.0+1
-  flutter_mobx: ^2.2.0+2
+  mobx: ^2.3.3+2
+  flutter_mobx: ^2.2.1+1
 
   # webView
-  flutter_inappwebview: 5.8.0
+  flutter_inappwebview: ^6.0.0
 
   # 网络图片缓存
   cached_network_image: ^3.3.1
@@ -52,18 +52,18 @@ dependencies:
   url_launcher: ^6.2.4
 
   # requests
-  dio: ^5.4.0
+  dio: ^5.5.0+1
   dio_http_cache_fix: ^0.5.1
-  dio_http2_adapter: ^2.4.0
+  dio_http2_adapter: ^2.5.3
 
   # 缓存
-  path_provider: ^2.1.2
+  path_provider: ^2.1.3
 
   # 加密
   crypto: ^3.0.3
 
   # 自动生成splash
-  flutter_native_splash: ^2.3.10
+  flutter_native_splash: ^2.4.1
 
   # toast
   flutter_easyloading: ^3.0.5
@@ -76,20 +76,23 @@ dependencies:
   # 动画库
   flutter_animate: ^4.5.0
 
+  # 极光推送
+#  jpush_flutter: 3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   # mobx library
-  build_runner: ^2.4.8
-  mobx_codegen: ^2.6.0+1
+  build_runner: ^2.4.11
+  mobx_codegen: ^2.6.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.1
+  flutter_lints: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

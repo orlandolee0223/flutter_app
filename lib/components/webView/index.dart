@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 // constants
 import 'package:flutter_app/constants/color.dart';
 import 'package:flutter_app/constants/routerUtil.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_app/components/webView/webView.store.dart';
 // utils
 import 'package:flutter_app/utils/browser.dart';
+import 'package:flutter_app/utils/shake.dart';
 import './utils.dart';
 // 导出
 export 'package:flutter_app/components/header/index.dart';
@@ -24,29 +24,23 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
   String title = ''; // 头部
   String url = ''; // url
   bool isWillPop = true; // 是否监听 webview记录
-  bool isScreen = true; // 是否需要单位
   bool isCache = false; // 是否需要缓存
 
   GlobalKey? webViewKey = GlobalKey();
-  InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
+  InAppWebViewSettings settings = InAppWebViewSettings(
     // 跨平台配置
-    crossPlatform: InAppWebViewOptions(
-      useShouldOverrideUrlLoading: true, // 加载url拦截功能
-      // useShouldInterceptAjaxRequest: true, // ajax请求拦截 打开会影响PNG电子加载
-      // useOnLoadResource: true, // 资源加载回调
-      transparentBackground: true, // 不要背景颜色
-      allowFileAccessFromFileURLs: true, // 资源加载
-      mediaPlaybackRequiresUserGesture: false, //多媒体控制
-    ),
+    useShouldOverrideUrlLoading: true, // 加载url拦截功能
+    // useShouldInterceptAjaxRequest: true, // ajax请求拦截 打开会影响PNG电子加载
+    // useOnLoadResource: true, // 资源加载回调
+    transparentBackground: true, // 不要背景颜色
+    allowFileAccessFromFileURLs: true, // 资源加载
+    mediaPlaybackRequiresUserGesture: false, //多媒体控制
     // android平台配置
-    android: AndroidInAppWebViewOptions(
-      useHybridComposition: true, // 支持HybridComposition
-      useShouldInterceptRequest: true, // 支持资源拦截
-    ),
+    useHybridComposition: true, // 支持HybridComposition
+    useShouldInterceptRequest: true, // 支持资源拦截
+    hardwareAcceleration: false, // 关闭硬件加速
     // iOS平台配置
-    ios: IOSInAppWebViewOptions(
-      allowsInlineMediaPlayback: true,
-    ),
+    allowsInlineMediaPlayback: true,
   );
 
   @override
@@ -124,7 +118,7 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
     } catch (e) {
       // 如果webview加载报错不处理
     }
-    if (!context.mounted) return false;
+    if (!mounted) return false;
     // 返回原生页面上一页
     if (!canBack) {
       if (Navigator.of(context).canPop()) {
@@ -139,12 +133,9 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
   // 头部左侧
   Widget renderLeading() {
     if (!isWillPop) {
-      return NavBack(
-        isScreen: isScreen,
-      );
+      return const NavBack();
     }
     return NavBack(
-      isScreen: isScreen,
       onPressed: () => onPopInvoked(false),
     );
   }
@@ -164,7 +155,6 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
       leadingWidth: getLeadingWidth(),
       title: title,
       actions: renderActions(),
-      isScreen: isScreen,
     );
   }
 
@@ -177,9 +167,9 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
   void onRefresh({
     InAppWebViewController? c,
   }) async {
-    HapticFeedback.lightImpact(); // 震动反馈
+    handleShake(); // 震动反馈
     if (Platform.isIOS) {
-      (c ?? controller).loadUrl(urlRequest: URLRequest(url: Uri.parse(url)));
+      (c ?? controller).loadUrl(urlRequest: URLRequest(url: WebUri(url)));
       return;
     }
     (c ?? controller).reload();
@@ -194,23 +184,43 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
   // 创建回调
   void onWebViewCreated(InAppWebViewController _) async {
     controller = _;
+    addJavaScriptHandler(_, context);
     handleController(_);
   }
 
-  // 安卓权限请求
-  Future<PermissionRequestResponse?> androidOnPermissionRequest(
+  // 注入js方法
+  void addJavaScriptHandler(
     InAppWebViewController controller,
-    String origin,
-    List<String> resources,
+    BuildContext context,
+  ) {
+    controller.addJavaScriptHandler(
+      handlerName: 'openAndroid', // 外跳到浏览器
+      callback: (args) {
+        print('url: ${args[0]}');
+      },
+    );
+    controller.addJavaScriptHandler(
+      handlerName: 'eventTracker', // 发送事件
+      callback: (args) {
+        print('eventType: ${args[0]}');
+        print('eventValue: ${args[1]}');
+      },
+    );
+  }
+
+  // 安卓权限请求
+  Future<PermissionResponse?> onPermissionRequest(
+    InAppWebViewController controller,
+    PermissionRequest permissionRequest,
   ) async {
-    return PermissionRequestResponse(
-      resources: resources,
-      action: PermissionRequestResponseAction.GRANT,
+    return PermissionResponse(
+      action: PermissionResponseAction.GRANT,
+      resources: permissionRequest.resources,
     );
   }
 
   // 安卓请求拦截
-  Future<WebResourceResponse?> androidShouldInterceptRequest(
+  Future<WebResourceResponse?> shouldInterceptRequest(
     InAppWebViewController controller,
     WebResourceRequest request,
   ) async {
@@ -230,16 +240,16 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
           url != ''
               ? InAppWebView(
                   key: webViewKey,
-                  initialUrlRequest: URLRequest(url: Uri.parse(url)),
-                  initialOptions: options,
+                  initialUrlRequest: URLRequest(url: WebUri(url)),
+                  initialSettings: settings,
                   onWebViewCreated: onWebViewCreated,
-                  androidOnPermissionRequest: androidOnPermissionRequest,
+                  onPermissionRequest: onPermissionRequest,
                   onLoadStart: onLoadStart,
                   onLoadStop: onLoadStop,
                   onProgressChanged: onProgressChanged, // 加载进度
                   onUpdateVisitedHistory: onUpdateVisitedHistory,
                   shouldOverrideUrlLoading: shouldOverrideUrlLoading,
-                  androidShouldInterceptRequest: androidShouldInterceptRequest,
+                  shouldInterceptRequest: shouldInterceptRequest,
                 )
               : Container(),
           // 进度条
@@ -248,8 +258,9 @@ abstract class BasicWebView<T extends StatefulWidget> extends State<T> {
               backgroundColor: ColorConstant.transparentColor,
               minHeight: 2,
               value: webViewStore.progress == 1.0 ? 0 : webViewStore.progress,
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(ColorConstant.primaryColor),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                ColorConstant.primaryColor,
+              ),
             ),
           ),
           ...renderBody(),
